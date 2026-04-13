@@ -9,9 +9,9 @@ def chunk_dates_generator(
     start: date, end: date, step_days: float = 3
 ) -> Generator[tuple[date, date], None, None]:
     current = start
-    end = end + timedelta(days=1)
+    # end = end + timedelta(days=1)
     step_d: timedelta = timedelta(1.0 if step_days == 0 else step_days)
-    while current < end:
+    while current <= end:
         right = current + step_d
         right = right if right <= end else end
         yield (current, right)
@@ -23,7 +23,7 @@ AssetCallback = Callable[[pl.LazyFrame], pl.LazyFrame]
 
 
 class DateRangeChunksIOManager:
-    def __init__(self, storage_options: dict) -> None:
+    def __init__(self, storage_options: dict = {}) -> None:
         self.storage_options: dict = storage_options
         self.in_columns: list[str] = []
         self.date_col = ""
@@ -64,7 +64,7 @@ class DateRangeChunksIOManager:
 
 
 class FakeDRCIOManager(DateRangeChunksIOManager):
-    def __init__(self, storage_options: dict) -> None:
+    def __init__(self) -> None:
         self.result: list[pl.DataFrame] = []
         pass
 
